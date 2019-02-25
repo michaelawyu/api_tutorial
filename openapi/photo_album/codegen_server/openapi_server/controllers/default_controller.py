@@ -6,49 +6,14 @@ import six
 
 from openapi_server.helpers import local as helper
 from openapi_server.models.error_message import ErrorMessage  # noqa: E501
-from openapi_server.models.inline_response200 import InlineResponse200 #noqa: E501
+from openapi_server.models.inline_response200 import InlineResponse200  # noqa: E501
 from openapi_server.models.photo import Photo  # noqa: E501
 from openapi_server.models.user import User  # noqa: E501
 from openapi_server import util
 
-API_SERVICE_NAME = '//photos.myapiservice.com'
+API_SERVICE_NAME = '//myapiservice.com'
 
 PAGE_SIZE = 10
-
-def add_photo(user_id, data, name=None, create_time=None):  # noqa: E501
-    """add_photo
-
-    Adds a photo # noqa: E501
-
-    :param user_id: ID of user
-    :type user_id: str
-    :param data: 
-    :type data: str
-    :param name: 
-    :type name: str
-    :param create_time: 
-    :type create_time: int
-
-    :rtype: Photo
-    """
-    parent = '{}/users/{}'.format(API_SERVICE_NAME, user_id)
-    photo_id = uuid.uuid4().hex
-    name = '{}/users/{}/photos/{}'.format(API_SERVICE_NAME, user_id, photo_id)
-    photo = Photo(
-        name=name,
-        created_at=int(time.time()),
-        data=data
-    )
-
-    try:
-        helper.create_photo(parent, photo)
-    except ValueError:
-        return ErrorMessage(
-            error_code='404 NOT_FOUND',
-            error_message='NOT_FOUND: Cannot find specified user.'
-        )
-    return photo
-
 
 def batchget_photo(user_id, photo_ids):  # noqa: E501
     """batchget_photo
@@ -64,8 +29,42 @@ def batchget_photo(user_id, photo_ids):  # noqa: E501
     """
     res = []
     for photo_id in photo_ids:
-        res.append(get_photo(user_id))
+        res.append(get_photo(user_id, photo_id))
     return res
+
+
+def create_photo(user_id, photo=None):  # noqa: E501
+    """create_photo
+
+    Creates a photo # noqa: E501
+
+    :param user_id: ID of user
+    :type user_id: str
+    :param photo: The photo to add
+    :type photo: dict | bytes
+
+    :rtype: Photo
+    """
+    if connexion.request.is_json:
+        photo = Photo.from_dict(connexion.request.get_json())  # noqa: E501
+    parent = '{}/users/{}'.format(API_SERVICE_NAME, user_id)
+    photo_id = uuid.uuid4().hex
+    name = '{}/users/{}/photos/{}'.format(API_SERVICE_NAME, user_id, photo_id)
+    photo = Photo(
+        name=name,
+        display_name=photo.display_name,
+        created_at=int(time.time()),
+        data=photo.data
+    )
+
+    try:
+        helper.create_photo(parent, photo)
+    except ValueError:
+        return ErrorMessage(
+            error_code='404 NOT_FOUND',
+            error_message='NOT_FOUND: Cannot find specified user.'
+        )
+    return photo
 
 
 def create_user(user=None):  # noqa: E501
@@ -87,6 +86,7 @@ def create_user(user=None):  # noqa: E501
 
     helper.create_user(name, user)
     return user
+
 
 def delete_photo(user_id, photo_id):  # noqa: E501
     """delete_photo

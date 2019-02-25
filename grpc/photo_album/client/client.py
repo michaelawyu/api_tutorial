@@ -9,7 +9,6 @@ from codegen import example_pb2_grpc
 
 SERVER_ADDRESS = '0.0.0.0'
 PORT = 8080
-
 BLOCK_SIZE = 20000
 
 class PhotoDataBlockRequestIterable(object):
@@ -71,10 +70,28 @@ class ListPhotosResponseIterable(object):
 
 class ExamplePhotoServiceClient(object):
     def __init__(self):
+        """Initializer. 
+           Creates a gRPC channel for connecting to the server.
+           Adds the channel to the generated client stub.
+        Arguments:
+            None.
+        
+        Returns:
+            None.
+        """
         self.channel = grpc.insecure_channel(f'{SERVER_ADDRESS}:{PORT}')
         self.stub = example_pb2_grpc.ExamplePhotoServiceStub(self.channel)
 
     def create_user(self, display_name, email):
+        """Creates a user.
+
+        Arguments:
+            display_name: The display name of a user.
+            email: The email of a user.
+        
+        Returns:
+            None; outputs to the terminal.
+        """
         request = example_pb2.User(
             display_name=display_name,
             email=email
@@ -102,6 +119,15 @@ class ExamplePhotoServiceClient(object):
             print('{}, {}'.format(err.code().name, err.code().value)) #pylint: disable=no-member
 
     def update_user(self, name, display_name = None, email = None):
+        """Updates a user.
+
+        Arguments:
+            display_name: The display name of a user.
+            email: The email of a user.
+        
+        Returns:
+            None; outputs to the terminal.
+        """
         mask = field_mask_pb2.FieldMask()
         
         if display_name:
@@ -129,6 +155,15 @@ class ExamplePhotoServiceClient(object):
             print('{}, {}'.format(err.code().name, err.code().value)) #pylint: disable=no-member
     
     def create_photo(self, parent, display_name):
+        """Creates a photo.
+
+        Arguments:
+            parent: The resource name of a user.
+            display_name: The display name of a photo.
+        
+        Returns:
+            None; outputs to the terminal.
+        """
         request = example_pb2.CreatePhotoRequest(
             parent=parent,
             photo=example_pb2.Photo(
@@ -145,6 +180,15 @@ class ExamplePhotoServiceClient(object):
             print('{}, {}'.format(err.code().name, err.code().value())) #pylint: disable=no-member
     
     def upload_photo(self, name, photo_path):
+        """Uploads a photo.
+
+        Arguments:
+            name: The resource name of a photo.
+            photo_path: The path to a binary image file.
+        
+        Returns:
+            None; outputs to the terminal.
+        """
         data_block_iterable = PhotoDataBlockRequestIterable(name, photo_path)
 
         try:
@@ -156,6 +200,16 @@ class ExamplePhotoServiceClient(object):
             print('{}, {}'.format(err.code().name, err.code().value())) #pylint: disable=no-member
 
     def create_and_upload_photo(self, parent, display_name, photo_path):
+        """Creates and uploads a photo.
+
+        Arguments:
+            parent: The resource name of a user.
+            display_name: The display name of a photo.
+            photo_path: Path to a binary image file.
+        
+        Returns:
+            photo (Photo): The photo created.
+        """
         photo = self.create_photo(parent, display_name)
         self.upload_photo(photo.name, photo_path)
 
@@ -163,6 +217,16 @@ class ExamplePhotoServiceClient(object):
         return photo
 
     def list_photos(self, parent, order_by=1, page_token=None):
+        """Lists photos.
+
+        Arguments:
+            parent: The resource name of a user.
+            order_by: The preferred order of returned results.
+            page_token: The token for next page of results.
+        
+        Returns:
+            list (ListPhotosResponseIterable): An iteration of photos.
+        """
         request = example_pb2.ListPhotosRequest(
             parent=parent,
             order_by=order_by,
@@ -190,6 +254,14 @@ class ExamplePhotoServiceClient(object):
             print('{}, {}'.format(err.code().name, err.code().value)) #pylint: disable=no-member
 
     def delete_photo(self, name):
+        """Deletes a photo.
+
+        Arguments:
+            name: The resource name of a photo.
+        
+        Returns:
+            None; outputs to the terminal.
+        """
         request = example_pb2.DeletePhotoRequest(
             name=name
         )
@@ -203,6 +275,14 @@ class ExamplePhotoServiceClient(object):
             print('{}, {}'.format(err.code().name, err.code().value)) #pylint: disable=no-member
 
     def stream_photos(self, names):
+        """Streams photos.
+
+        Arguments:
+            names: A list of resource names of photos.
+        
+        Returns:
+            None; outputs to the terminal.
+        """
         def convert_name_to_get_photo_request(name):
             return example_pb2.GetPhotoRequest(
                 name=name

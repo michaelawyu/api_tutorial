@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 
 
-Gets an user
+Gets a user
 
 ### Example
 ```python

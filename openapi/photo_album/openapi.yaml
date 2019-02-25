@@ -19,6 +19,7 @@ components:
       properties:
         name:
           type: string
+          readOnly: true
         display_name:
           type: string
           maxLength: 20d
@@ -33,12 +34,15 @@ components:
       properties:
         name:
           type: string
+          readOnly: true
+        display_name:
+          type: string
         created_at:
           type: integer
           format: long
+          readOnly: true
         data:
           type: string
-          format: binary
     'ErrorMessage':
       type: object
       required:
@@ -181,12 +185,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
     post:
-      description: Adds a photo
-      operationId: add_photo
+      description: Creates a photo
+      operationId: create_photo
       requestBody:
         description: The photo to add
         content:
-          'multipart/form-data':
+          'application/json':
             schema:
               $ref: '#/components/schemas/Photo'
       responses:

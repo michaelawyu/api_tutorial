@@ -32,26 +32,31 @@ class Photo(object):
     """
     openapi_types = {
         'name': 'str',
+        'display_name': 'str',
         'created_at': 'int',
-        'data': 'file'
+        'data': 'str'
     }
 
     attribute_map = {
         'name': 'name',
+        'display_name': 'display_name',
         'created_at': 'created_at',
         'data': 'data'
     }
 
-    def __init__(self, name=None, created_at=None, data=None):  # noqa: E501
+    def __init__(self, name=None, display_name=None, created_at=None, data=None):  # noqa: E501
         """Photo - a model defined in OpenAPI"""  # noqa: E501
 
         self._name = None
+        self._display_name = None
         self._created_at = None
         self._data = None
         self.discriminator = None
 
         if name is not None:
             self.name = name
+        if display_name is not None:
+            self.display_name = display_name
         if created_at is not None:
             self.created_at = created_at
         self.data = data
@@ -76,6 +81,27 @@ class Photo(object):
         """
 
         self._name = name
+
+    @property
+    def display_name(self):
+        """Gets the display_name of this Photo.  # noqa: E501
+
+
+        :return: The display_name of this Photo.  # noqa: E501
+        :rtype: str
+        """
+        return self._display_name
+
+    @display_name.setter
+    def display_name(self, display_name):
+        """Sets the display_name of this Photo.
+
+
+        :param display_name: The display_name of this Photo.  # noqa: E501
+        :type: str
+        """
+
+        self._display_name = display_name
 
     @property
     def created_at(self):
@@ -104,7 +130,7 @@ class Photo(object):
 
 
         :return: The data of this Photo.  # noqa: E501
-        :rtype: file
+        :rtype: str
         """
         return self._data
 
@@ -114,7 +140,7 @@ class Photo(object):
 
 
         :param data: The data of this Photo.  # noqa: E501
-        :type: file
+        :type: str
         """
         if data is None:
             raise ValueError("Invalid value for `data`, must not be `None`")  # noqa: E501

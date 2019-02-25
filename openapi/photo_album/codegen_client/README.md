@@ -54,15 +54,13 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = openapi_client.DefaultApi(openapi_client.ApiClient(configuration))
 user_id = 'user_id_example' # str | ID of user
-data = '/path/to/file' # file | 
-name = 'name_example' # str |  (optional)
-created_at = 56 # int |  (optional)
+photo_ids = ['photo_ids_example'] # list[str] | a collection of photo IDs
 
 try:
-    api_response = api_instance.add_photo(user_id, data, name=name, created_at=created_at)
+    api_response = api_instance.batchget_photo(user_id, photo_ids)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling DefaultApi->add_photo: %s\n" % e)
+    print("Exception when calling DefaultApi->batchget_photo: %s\n" % e)
 
 ```
 
@@ -72,8 +70,8 @@ All URIs are relative to *http://localhost:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**add_photo**](docs/DefaultApi.md#add_photo) | **POST** /users/{user_id}/photos/ | 
 *DefaultApi* | [**batchget_photo**](docs/DefaultApi.md#batchget_photo) | **GET** /users/{user_id}/photos:batchGet | 
+*DefaultApi* | [**create_photo**](docs/DefaultApi.md#create_photo) | **POST** /users/{user_id}/photos/ | 
 *DefaultApi* | [**create_user**](docs/DefaultApi.md#create_user) | **POST** /users | 
 *DefaultApi* | [**delete_photo**](docs/DefaultApi.md#delete_photo) | **DELETE** /users/{user_id}/photos/{photo_id} | 
 *DefaultApi* | [**get_photo**](docs/DefaultApi.md#get_photo) | **GET** /users/{user_id}/photos/{photo_id} | 

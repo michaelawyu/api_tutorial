@@ -141,8 +141,8 @@ paths:
           description: Unexpected error
       x-openapi-router-controller: openapi_server.controllers.default_controller
     post:
-      description: Adds a photo
-      operationId: add_photo
+      description: Creates a photo
+      operationId: create_photo
       parameters:
       - description: ID of user
         explode: false
@@ -154,7 +154,7 @@ paths:
         style: simple
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/Photo'
         description: The photo to add
@@ -315,6 +315,7 @@ components:
         email: email
       properties:
         name:
+          readOnly: true
           type: string
         display_name:
           minLength: 1
@@ -328,17 +329,21 @@ components:
       type: object
     Photo:
       example:
-        data: ""
+        data: data
         name: name
         created_at: 0
+        display_name: display_name
       properties:
         name:
+          readOnly: true
+          type: string
+        display_name:
           type: string
         created_at:
           format: long
+          readOnly: true
           type: integer
         data:
-          format: binary
           type: string
       required:
       - data
@@ -357,12 +362,14 @@ components:
       example:
         next_page_token: next_page_token
         photos:
-        - data: ""
+        - data: data
           name: name
           created_at: 0
-        - data: ""
+          display_name: display_name
+        - data: data
           name: name
           created_at: 0
+          display_name: display_name
       properties:
         photos:
           items:

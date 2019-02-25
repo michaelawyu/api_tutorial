@@ -6,6 +6,7 @@ from flask import json
 from six import BytesIO
 
 from openapi_server.models.error_message import ErrorMessage  # noqa: E501
+from openapi_server.models.inline_response200 import InlineResponse200  # noqa: E501
 from openapi_server.models.photo import Photo  # noqa: E501
 from openapi_server.models.user import User  # noqa: E501
 from openapi_server.test import BaseTestCase
@@ -14,8 +15,21 @@ from openapi_server.test import BaseTestCase
 class TestDefaultController(BaseTestCase):
     """DefaultController integration test stubs"""
 
-    def test_add_photo(self):
-        """Test case for add_photo
+    def test_batchget_photo(self):
+        """Test case for batchget_photo
+
+        
+        """
+        query_string = [('photo_ids', 'photo_ids_example')]
+        response = self.client.open(
+            '/users/{user_id}/photos:batchGet'.format(user_id='user_id_example'),
+            method='GET',
+            query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_create_photo(self):
+        """Test case for create_photo
 
         
         """
@@ -25,19 +39,6 @@ class TestDefaultController(BaseTestCase):
             method='POST',
             data=json.dumps(photo),
             content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-    def test_batchget_photo(self):
-        """Test case for batchget_photo
-
-        
-        """
-        query_string = [('photo_ids', 'photo_ids_example')]
-        response = self.client.open(
-            '/users/{user_id}/photos/{photo_id}:batchGet'.format(user_id='user_id_example', photo_id='photo_id_example'),
-            method='GET',
-            query_string=query_string)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -93,7 +94,8 @@ class TestDefaultController(BaseTestCase):
 
         
         """
-        query_string = [('order_by', 'order_by_example')]
+        query_string = [('order_by', 'order_by_example'),
+                        ('page_token', 'page_token_example')]
         response = self.client.open(
             '/users/{user_id}/photos/'.format(user_id='user_id_example'),
             method='GET',
@@ -106,11 +108,12 @@ class TestDefaultController(BaseTestCase):
 
         
         """
-        query_string = [('field_mask', 'field_mask_example')]
+        user = User()
         response = self.client.open(
             '/users/{user_id}'.format(user_id='user_id_example'),
             method='PATCH',
-            query_string=query_string)
+            data=json.dumps(user),
+            content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Sample OpenAPI Specification
-  description: 'An OpenAPI specification sample for [Build, Deploy, and Manage Networked APIs: An Overview](https://goo.gl/VardtG) document.'
+  description: 'An OpenAPI specification example for Building API services: A Beginners Guide document.'
   version: 0.0.1
 servers:
   - url: http://localhost:8080/
@@ -16,6 +16,7 @@ components:
       properties:
         name:
           type: string
+          readOnly: true
         display_name:
           type: string
           maxLength: 20

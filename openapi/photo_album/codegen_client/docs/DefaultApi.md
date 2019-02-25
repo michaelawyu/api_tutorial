@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**add_photo**](DefaultApi.md#add_photo) | **POST** /users/{user_id}/photos/ | 
 [**batchget_photo**](DefaultApi.md#batchget_photo) | **GET** /users/{user_id}/photos:batchGet | 
+[**create_photo**](DefaultApi.md#create_photo) | **POST** /users/{user_id}/photos/ | 
 [**create_user**](DefaultApi.md#create_user) | **POST** /users | 
 [**delete_photo**](DefaultApi.md#delete_photo) | **DELETE** /users/{user_id}/photos/{photo_id} | 
 [**get_photo**](DefaultApi.md#get_photo) | **GET** /users/{user_id}/photos/{photo_id} | 
@@ -13,59 +13,6 @@ Method | HTTP request | Description
 [**list_photos**](DefaultApi.md#list_photos) | **GET** /users/{user_id}/photos/ | 
 [**update_user**](DefaultApi.md#update_user) | **PATCH** /users/{user_id} | 
 
-
-# **add_photo**
-> Photo add_photo(user_id, data, name=name, created_at=created_at)
-
-
-
-Adds a photo
-
-### Example
-```python
-from __future__ import print_function
-import time
-import openapi_client
-from openapi_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = openapi_client.DefaultApi()
-user_id = 'user_id_example' # str | ID of user
-data = '/path/to/file' # file | 
-name = 'name_example' # str |  (optional)
-created_at = 56 # int |  (optional)
-
-try:
-    api_response = api_instance.add_photo(user_id, data, name=name, created_at=created_at)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling DefaultApi->add_photo: %s\n" % e)
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **user_id** | **str**| ID of user | 
- **data** | **file**|  | 
- **name** | **str**|  | [optional] 
- **created_at** | **int**|  | [optional] 
-
-### Return type
-
-[**Photo**](Photo.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: multipart/form-data
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **batchget_photo**
 > list[Photo] batchget_photo(user_id, photo_ids)
@@ -112,6 +59,55 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **create_photo**
+> Photo create_photo(user_id, photo=photo)
+
+
+
+Creates a photo
+
+### Example
+```python
+from __future__ import print_function
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+user_id = 'user_id_example' # str | ID of user
+photo = openapi_client.Photo() # Photo | The photo to add (optional)
+
+try:
+    api_response = api_instance.create_photo(user_id, photo=photo)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->create_photo: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **user_id** | **str**| ID of user | 
+ **photo** | [**Photo**](Photo.md)| The photo to add | [optional] 
+
+### Return type
+
+[**Photo**](Photo.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

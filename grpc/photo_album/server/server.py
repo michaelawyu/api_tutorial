@@ -13,17 +13,27 @@ from models import local as model
 from helpers import error_handler
 
 API_SERVICE_NAME = '//myapiservice.com'
-
 PAGE_SIZE = 10
 
-class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
+class ExamplePhotoServiceServicer(example_pb2_grpc.ExamplePhotoServiceServicer):
     def CreateUser(self, request, context):
-        user = request.user
+        """Creates a user.
+           gRPC calls this method when clients call the CreateUser rpc (method).
+
+        Arguments:
+            request (User): The incoming request.
+            context: The gRPC connection context.
+        
+        Returns:
+            user (User): A user.
+        """
+        user = request
 
         user_id = uuid.uuid4().hex
         name = '{}/users/{}'.format(API_SERVICE_NAME, user_id)
         user.name = name
         
+        # Saves the user in memory
         model.create_user(name, user)
 
         return user
@@ -43,6 +53,16 @@ class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
         return user
 
     def UpdateUser(self, request, context):
+        """Updates a user.
+           gRPC calls this method when clients call the UpdateUser rpc (method).
+
+        Arguments:
+            request (UpdateUserRequest): The incoming request.
+            context: The gRPC connection context.
+        
+        Returns:
+            user (User): A user.
+        """
         name = request.name
         updated_user = request.user
         mask = request.mask
@@ -56,22 +76,32 @@ class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
             )
 
         mask.MergeMessage(updated_user, original_user)
-        updated_user.name = name
-        model.update_user(name, updated_user)
+        original_user.name = name
+        model.update_user(name, original_user)
         
-        return updated_user
+        return original_user
 
     def CreatePhoto(self, request, context):
+        """Creates a photo.
+           gRPC calls this method when clients call the CreatePhoto rpc (method).
+
+        Arguments:
+            request (CreatePhotoRequest): The incoming request.
+            context: The gRPC connection context.
+        
+        Returns:
+            photo (Photo): A user.
+        """
         parent = request.parent
         photo = request.photo
 
         photo_id = uuid.uuid4().hex
         created_at = timestamp_pb2.Timestamp(seconds=int(time.time()))
-        name = '//{}/users/{}/photos/{}'.format(API_SERVICE_NAME, parent,
-                                                photo_id)
+        name = '{}/photos/{}'.format(parent, photo_id)
         photo.name = name
         photo.created_at.CopyFrom(created_at)
         try:
+            # Saves the photo in memory
             model.create_photo(parent, photo)
         except ValueError:
             return error_handler.throw_exception(
@@ -83,6 +113,16 @@ class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
         return photo
     
     def ListPhotos(self, request, context):
+        """Lists photos.
+           gRPC calls this method when clients call the ListPhotos rpc (method).
+
+        Arguments:
+            request (ListPhotosRequest): The incoming request.
+            context: The gRPC connection context.
+        
+        Returns:
+            reponse (ListPhotosResponse): A ListPhotosResponse.
+        """
         page_token = request.page_token
 
         if page_token:
@@ -136,6 +176,16 @@ class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
         return photo
 
     def DeletePhoto(self, request, context):
+        """Deletes a photo.
+           gRPC calls this method when clients call the DeletePhoto rpc (method).
+
+        Arguments:
+            request (DeletePhotoRequest): The incoming request.
+            context: The gRPC connection context.
+        
+        Returns:
+            an Empty gRPC message.
+        """
         name = request.name
 
         try:
@@ -150,6 +200,16 @@ class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
         return empty_pb2.Empty()
     
     def UploadPhoto(self, request_iterator, context):
+        """Uploads a photo.
+           gRPC calls this method when clients call the UploadPhoto rpc (method).
+
+        Arguments:
+            request_iterator (iterator): An iterator of incoming requests.
+            context: The gRPC connection context.
+        
+        Returns:
+            An Empty Protocol Buffers message.
+        """
         data_blocks = []
         data_hash = None
         name = None
@@ -199,12 +259,22 @@ class ExamplePhotoServiceServer(example_pb2_grpc.ExamplePhotoServiceServicer):
         pass
 
     def StreamPhotos(self, request_iterator, context):
+        """Streams photos.
+           gRPC calls this method when clients call the StreamPhotos rpc (method).
+
+        Arguments:
+            request_iterator (iterator): An iterator of incoming requests.
+            context: The gRPC connection context.
+        
+        Returns:
+            A generator.
+        """
         for request in request_iterator:
             yield self.GetPhoto(request, context)
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-    example_pb2_grpc.add_ExamplePhotoServiceServicer_to_server(ExamplePhotoServiceServer(), server)
+    example_pb2_grpc.add_ExamplePhotoServiceServicer_to_server(ExamplePhotoServiceServicer(), server)
     server.add_insecure_port('0.0.0.0:8080')
     server.start()
     print('API server started. Listening at 0.0.0.0:8080.')

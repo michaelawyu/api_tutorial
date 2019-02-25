@@ -15,29 +15,34 @@ class Photo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name=None, created_at=None, data=None):  # noqa: E501
+    def __init__(self, name=None, display_name=None, created_at=None, data=None):  # noqa: E501
         """Photo - a model defined in OpenAPI
 
         :param name: The name of this Photo.  # noqa: E501
         :type name: str
+        :param display_name: The display_name of this Photo.  # noqa: E501
+        :type display_name: str
         :param created_at: The created_at of this Photo.  # noqa: E501
         :type created_at: int
         :param data: The data of this Photo.  # noqa: E501
-        :type data: file
+        :type data: str
         """
         self.openapi_types = {
             'name': str,
+            'display_name': str,
             'created_at': int,
-            'data': bytes
+            'data': str
         }
 
         self.attribute_map = {
             'name': 'name',
+            'display_name': 'display_name',
             'created_at': 'created_at',
             'data': 'data'
         }
 
         self._name = name
+        self._display_name = display_name
         self._created_at = created_at
         self._data = data
 
@@ -74,6 +79,27 @@ class Photo(Model):
         self._name = name
 
     @property
+    def display_name(self):
+        """Gets the display_name of this Photo.
+
+
+        :return: The display_name of this Photo.
+        :rtype: str
+        """
+        return self._display_name
+
+    @display_name.setter
+    def display_name(self, display_name):
+        """Sets the display_name of this Photo.
+
+
+        :param display_name: The display_name of this Photo.
+        :type display_name: str
+        """
+
+        self._display_name = display_name
+
+    @property
     def created_at(self):
         """Gets the created_at of this Photo.
 
@@ -100,7 +126,7 @@ class Photo(Model):
 
 
         :return: The data of this Photo.
-        :rtype: file
+        :rtype: str
         """
         return self._data
 
@@ -110,7 +136,7 @@ class Photo(Model):
 
 
         :param data: The data of this Photo.
-        :type data: file
+        :type data: str
         """
         if data is None:
             raise ValueError("Invalid value for `data`, must not be `None`")  # noqa: E501

@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class ExamplePhotoServiceStub(object):
-  """
+  """Service definitions
   """
 
   def __init__(self, channel):
@@ -63,7 +63,7 @@ class ExamplePhotoServiceStub(object):
 
 
 class ExamplePhotoServiceServicer(object):
-  """
+  """Service definitions
   """
 
   def CreateUser(self, request, context):

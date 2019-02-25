@@ -1,0 +1,12 @@
+Metadata-Version: 1.0
+Name: openapi-client
+Version: 1.0.0
+Summary: Sample OpenAPI Specification
+Home-page: UNKNOWN
+Author: UNKNOWN
+Author-email: UNKNOWN
+License: UNKNOWN
+Description:     An OpenAPI specification sample for [Build, Deploy, and Manage Networked APIs: An Overview](https://goo.gl/VardtG) document.  # noqa: E501
+            
+Keywords: OpenAPI,OpenAPI-Generator,Sample OpenAPI Specification
+Platform: UNKNOWN

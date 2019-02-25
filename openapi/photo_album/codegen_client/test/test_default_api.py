@@ -28,14 +28,14 @@ class TestDefaultApi(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_add_photo(self):
-        """Test case for add_photo
+    def test_batchget_photo(self):
+        """Test case for batchget_photo
 
         """
         pass
 
-    def test_batchget_photo(self):
-        """Test case for batchget_photo
+    def test_create_photo(self):
+        """Test case for create_photo
 
         """
         pass
