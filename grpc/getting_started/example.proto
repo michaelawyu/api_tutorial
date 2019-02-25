@@ -1,0 +1,18 @@
+// Syntax version
+syntax = "proto3";
+
+// Service definition
+service ExampleService {
+    rpc GetUser (GetUserRequest) returns (User);
+}
+
+// Message types
+message User {
+    string name = 1;
+    string display_name = 2;
+    string email = 3;
+}
+
+message GetUserRequest {
+    string name = 1;
+}

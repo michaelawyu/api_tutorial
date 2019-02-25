@@ -1,0 +1,60 @@
+openapi: 3.0.2
+info:
+  title: Sample OpenAPI Specification
+  description: 'An OpenAPI specification sample for [Build, Deploy, and Manage Networked APIs: An Overview](https://goo.gl/VardtG) document.'
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/
+    description: Example API Service
+components:
+  schemas:
+    'User':
+      type: object
+      required:
+        - display_name
+        - email
+      properties:
+        name:
+          type: string
+        display_name:
+          type: string
+          maxLength: 20
+          minLength: 1
+        email:
+          type: string
+          format: email
+    'ErrorMessage':
+      type: object
+      required:
+        - error_code
+        - error_message
+      properties:
+        error_code:
+          type: string
+        error_message:
+          type: string
+paths:
+  /users/{user_id}:
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: string
+    get:
+      description: Gets a user
+      operationId: get_user
+      responses:
+        '200':
+          description: User found
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/User'
+        'default':
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'

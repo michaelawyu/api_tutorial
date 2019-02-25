@@ -1,0 +1,259 @@
+openapi: 3.0.1
+info:
+  title: Sample OpenAPI Specification
+  description: 'An OpenAPI specification sample for [Build, Deploy, and Manage Networked APIs: An Overview](https://goo.gl/VardtG) document.'
+  version: 0.0.1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8080/
+    description: Example API Service
+components:
+  schemas:
+    'User':
+      type: object
+      required:
+        - display_name
+        - email
+      properties:
+        name:
+          type: string
+        display_name:
+          type: string
+          maxLength: 20d
+          minLength: 1
+        email:
+          type: string
+          format: email
+    'Photo':
+      type: object
+      required:
+        - data
+      properties:
+        name:
+          type: string
+        created_at:
+          type: integer
+          format: long
+        data:
+          type: string
+          format: binary
+    'ErrorMessage':
+      type: object
+      required:
+        - error_code
+        - error_message
+      properties:
+        error_code:
+          type: string
+        error_message:
+          type: string  
+  parameters:
+    'user_id':
+      name: user_id
+      in: path
+      description: ID of user
+      required: true
+      schema:
+        type: string
+    'photo_id':
+      name: photo_id
+      in: path
+      description: ID of photo
+      required: true
+      schema:
+        type: string
+    'photo_ids':
+      name: photo_ids
+      in: query
+      description: a collection of photo IDs
+      required: true
+      schema:
+        type: array
+        items:
+          type: string
+paths:
+  /users:
+    post:
+      description: Creates a new user
+      operationId: create_user
+      requestBody:
+        description: The user to create
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User added
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /users/{user_id}:
+    parameters:
+      - $ref: '#/components/parameters/user_id'
+    get:
+      description: Gets a user
+      operationId: get_user
+      responses:
+        '200':
+          description: User found
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    patch:
+      description: Updates a user
+      operationId: update_user
+      requestBody:
+        description: The user to update
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+          content:
+            'application/json':
+              schema:
+               $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /users/{user_id}/photos/:
+    parameters:
+      - $ref: '#/components/parameters/user_id'
+    get:
+      description: Lists all photos
+      operationId: list_photos
+      parameters:
+        - name: 'order_by'
+          in: query
+          description: Ordering for the results
+          required: false
+          schema:
+            type: string
+            enum:
+              - 'display_name'
+              - 'created_at'
+        - name: 'page_token'
+          in: query
+          description: Token for the next page
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of photos and next_page_token
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  photos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Photo'
+                  next_page_token:
+                    type: string
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    post:
+      description: Adds a photo
+      operationId: add_photo
+      requestBody:
+        description: The photo to add
+        content:
+          'multipart/form-data':
+            schema:
+              $ref: '#/components/schemas/Photo'
+      responses:
+        '200':
+          description: Photo added
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Photo'
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /users/{user_id}/photos/{photo_id}:
+    parameters:
+      - $ref: '#/components/parameters/user_id'
+      - $ref: '#/components/parameters/photo_id'
+    get:
+      description: Gets a photo
+      operationId: get_photo
+      responses:
+        '200':
+          description: Photo found
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Photo'
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    delete:
+      description: Deletes a photo
+      operationId: delete_photo
+      responses:
+        '200':
+          description: Photo deleted
+        default:
+          description: Unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /users/{user_id}/photos:batchGet:
+    parameters:
+      - $ref: '#/components/parameters/user_id'
+    get:
+      description: Gets a list of photos
+      operationId: batchget_photo
+      parameters:
+        - $ref: '#/components/parameters/photo_ids'
+      responses:
+        '200':
+          description: List of photos found
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Photo'
+        default:
+            description: Unexpected error
+            content:
+              'application/json':
+                schema:
+                  $ref: '#/components/schemas/ErrorMessage'

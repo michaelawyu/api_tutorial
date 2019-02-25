@@ -1,0 +1,372 @@
+openapi: 3.0.1
+info:
+  description: 'An OpenAPI specification sample for [Build, Deploy, and Manage Networked
+    APIs: An Overview](https://goo.gl/VardtG) document.'
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Sample OpenAPI Specification
+  version: 0.0.1
+servers:
+- description: Example API Service
+  url: http://localhost:8080/
+paths:
+  /users:
+    post:
+      description: Creates a new user
+      operationId: create_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: The user to create
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User added
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /users/{user_id}:
+    get:
+      description: Gets a user
+      operationId: get_user
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    patch:
+      description: Updates a user
+      operationId: update_user
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: The user to update
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User updated
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /users/{user_id}/photos/:
+    get:
+      description: Lists all photos
+      operationId: list_photos
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Ordering for the results
+        explode: true
+        in: query
+        name: order_by
+        required: false
+        schema:
+          enum:
+          - display_name
+          - created_at
+          type: string
+        style: form
+      - description: Token for the next page
+        explode: true
+        in: query
+        name: page_token
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: List of photos and next_page_token
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    post:
+      description: Adds a photo
+      operationId: add_photo
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Photo'
+        description: The photo to add
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+          description: Photo added
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /users/{user_id}/photos/{photo_id}:
+    delete:
+      description: Deletes a photo
+      operationId: delete_photo
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: ID of photo
+        explode: false
+        in: path
+        name: photo_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          description: Photo deleted
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+    get:
+      description: Gets a photo
+      operationId: get_photo
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: ID of photo
+        explode: false
+        in: path
+        name: photo_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+          description: Photo found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+  /users/{user_id}/photos:batchGet:
+    get:
+      description: Gets a list of photos
+      operationId: batchget_photo
+      parameters:
+      - description: ID of user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: a collection of photo IDs
+        explode: true
+        in: query
+        name: photo_ids
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Photo'
+                type: array
+          description: List of photos found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  parameters:
+    user_id:
+      description: ID of user
+      explode: false
+      in: path
+      name: user_id
+      required: true
+      schema:
+        type: string
+      style: simple
+    photo_id:
+      description: ID of photo
+      explode: false
+      in: path
+      name: photo_id
+      required: true
+      schema:
+        type: string
+      style: simple
+    photo_ids:
+      description: a collection of photo IDs
+      explode: true
+      in: query
+      name: photo_ids
+      required: true
+      schema:
+        items:
+          type: string
+        type: array
+      style: form
+  schemas:
+    User:
+      example:
+        name: name
+        display_name: display_name
+        email: email
+      properties:
+        name:
+          type: string
+        display_name:
+          minLength: 1
+          type: string
+        email:
+          format: email
+          type: string
+      required:
+      - display_name
+      - email
+      type: object
+    Photo:
+      example:
+        data: ""
+        name: name
+        created_at: 0
+      properties:
+        name:
+          type: string
+        created_at:
+          format: long
+          type: integer
+        data:
+          format: binary
+          type: string
+      required:
+      - data
+      type: object
+    ErrorMessage:
+      properties:
+        error_code:
+          type: string
+        error_message:
+          type: string
+      required:
+      - error_code
+      - error_message
+      type: object
+    inline_response_200:
+      example:
+        next_page_token: next_page_token
+        photos:
+        - data: ""
+          name: name
+          created_at: 0
+        - data: ""
+          name: name
+          created_at: 0
+      properties:
+        photos:
+          items:
+            $ref: '#/components/schemas/Photo'
+          type: array
+        next_page_token:
+          type: string

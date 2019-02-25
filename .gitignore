@@ -1,0 +1,8 @@
+.vscode
+*.pem
+*.key
+*.crt
+__pycache__
+*.pyc
+*.bak
+env

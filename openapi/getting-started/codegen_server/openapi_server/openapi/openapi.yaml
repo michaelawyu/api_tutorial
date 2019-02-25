@@ -1,0 +1,82 @@
+openapi: 3.0.2
+info:
+  contact: {}
+  description: 'An OpenAPI specification sample for [Build, Deploy, and Manage Networked
+    APIs: An Overview](https://goo.gl/VardtG) document.'
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Sample OpenAPI Specification
+  version: 0.0.1
+servers:
+- description: API service (Production)
+  url: https://api.example.com/
+paths:
+  /users/{user_id}:
+    get:
+      description: Gets an user
+      operationId: get_user
+      parameters:
+      - description: ID of a user
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+          description: Unexpected error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  parameters:
+    user_id:
+      description: ID of a user
+      explode: false
+      in: path
+      name: user_id
+      required: true
+      schema:
+        type: string
+      style: simple
+  schemas:
+    User:
+      example:
+        name: name
+        display_name: display_name
+        email: email
+      properties:
+        name:
+          type: string
+        display_name:
+          maxLength: 20
+          minLength: 1
+          type: string
+        email:
+          format: email
+          type: string
+      required:
+      - display_name
+      - email
+      type: object
+    ErrorMessage:
+      properties:
+        error_code:
+          type: string
+        error_message:
+          type: string
+      required:
+      - error_code
+      - error_message
+      type: object

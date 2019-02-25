@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package example.photoservice;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+
+//
+service ExamplePhotoService {
+    rpc CreateUser (User) returns (User);
+    rpc GetUser (GetUserRequest) returns (User);
+    rpc UpdateUser (UpdateUserRequest) returns (User);
+    rpc CreatePhoto (CreatePhotoRequest) returns (Photo);
+    rpc ListPhotos (ListPhotosRequest) returns (ListPhotosResponse);
+    rpc GetPhoto (GetPhotoRequest) returns (Photo);
+    rpc DeletePhoto (DeletePhotoRequest) returns (google.protobuf.Empty);
+    rpc UploadPhoto (stream PhotoDataBlock) returns (google.protobuf.Empty);
+    rpc StreamPhotos (stream GetPhotoRequest) returns (stream Photo);
+}
+
+//
+message User {
+    string name = 1;
+    string display_name = 2;
+    string email = 3;
+}
+
+message Photo {
+    string name = 1;
+    string display_name = 3;
+    google.protobuf.Timestamp created_at  = 4;
+}
+
+message GetUserRequest {
+    string name = 1;
+}
+
+message UpdateUserRequest {
+    string name = 1;
+    User user = 2;
+    google.protobuf.FieldMask mask = 3;
+}
+
+message CreatePhotoRequest {
+    string parent = 2;
+    Photo photo = 3;
+}
+
+message ListPhotosRequest {
+    string parent = 1;
+    enum OrderBy {
+        DEFAULT = 0;
+        DISPLAY_NAME = 1;
+        CREATED_AT = 2;
+    }
+    OrderBy order_by = 2;
+    string page_token = 3;
+}
+
+message ListPhotosResponse {
+    repeated Photo photos = 1;
+    string next_page_token = 2;
+}
+
+message GetPhotoRequest {
+    string name = 1;
+}
+
+message DeletePhotoRequest {
+    string name = 1;
+}
+
+message PhotoDataBlock {
+    string name = 1;
+    bytes data_block = 3;
+    string data_block_hash = 4;
+    string data_hash = 5;
+}
